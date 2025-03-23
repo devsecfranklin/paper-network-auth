@@ -1,0 +1,13 @@
+franklin ~: klist 
+klist: No credentials cache found (filename: /tmp/krb5cc_1000)
+franklin ~: kinit
+Password for franklin@LAB.BITSMASHER.NET: 
+franklin ~: klist 
+Ticket cache: FILE:/tmp/krb5cc_1000
+Default principal: franklin@LAB.BITSMASHER.NET
+
+Valid starting       Expires              Service principal
+10/21/2021 08:25:16  10/21/2021 18:25:16  krbtgt/LAB.BITSMASHER.NET@LAB.BITSMASHER.NET
+	renew until 10/22/2021 08:25:05
+franklin ~:  
+

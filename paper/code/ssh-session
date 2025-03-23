@@ -1,0 +1,26 @@
+franklin ~: ssh -K server1 -v                                                                                                                      (0.012475 hrs)
+OpenSSH_8.4p1 Ubuntu-5ubuntu1.1, OpenSSL 1.1.1j  16 Feb 2021
+debug1: Connecting to server1 [10.10.12.12] port 22.
+debug1: Skipping ssh-dss key /home/franklin/.ssh/id_dsa - not in PubkeyAcceptedKeyTypes
+debug1: Authentications that can continue: gssapi-keyex,gssapi-with-mic
+debug1: Next authentication method: gssapi-with-mic
+debug1: Delegating credentials
+debug1: Authentication succeeded (gssapi-with-mic).
+Authenticated to server1 ([10.10.12.12]:22).
+Linux server1.lab.bitsmasher.net 5.10.73-v7+ #1470 SMP Mon Oct 18 11:25:58 BST 2021 armv7l
+
+   .~~.   .~~.
+  '. \ ' ' / .'
+   .~ .~~~..~.
+  : .~.'~'.~. :
+ ~ (   ) (   ) ~
+( : '~'.~.'~' : ) Welcome to the lab cluster: server1
+ ~ .~ (   ) ~. ~
+  (  : '~' :  )
+   '~ .~~~. ~'
+       '~'
+
+Last login: Thu Oct 21 12:13:30 2021 from 10.10.12.17
+
+franklin@server1:~ $ 
+

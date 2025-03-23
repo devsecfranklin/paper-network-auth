@@ -1,0 +1,19 @@
+franklin : docker build -t franklin:krb-ldap \
+             --build-arg BUILD_DATE=(date -u +'%Y-%m-%dT%H:%M:%SZ') .
+franklin : docker image ls | grep krb-ldap 
+franklin : docker run --rm -it franklin:krb-ldap /bin/ash
+
+franklin : docker run --rm -it franklin:krb-ldap /bin/ash
+/go # su - franklin
+24e52ca4c260:~$ klist
+klist: No credentials cache found (filename: /tmp/krb5cc_1000)
+24e52ca4c260:~$ kinit
+Password for franklin@LAB.BITSMASHER.NET: 
+24e52ca4c260:~$ klist
+Ticket cache: FILE:/tmp/krb5cc_1000
+Default principal: franklin@LAB.BITSMASHER.NET
+
+Valid starting     Expires            Service principal
+10/21/21 20:13:47  10/22/21 06:13:47  krbtgt/LAB.BITSMASHER.NET@LAB.BITSMASHER.NET
+	renew until 10/22/21 20:13:39
+24e52ca4c260:~$ 

@@ -1,0 +1,16 @@
+franklin@server1:~ $ dig srv _kerberos._udp.lab.bitsmasher.net | grep -v ';;'
+
+; <<>> DiG 9.11.5-P4-5.1+deb10u5-Raspbian <<>> srv _kerberos._udp.lab.bitsmasher.net
+;_kerberos._udp.lab.bitsmasher.net. IN	SRV
+_kerberos._udp.lab.bitsmasher.net. 10800 IN SRV	0 0 88 odroid-c1.lab.bitsmasher.net.
+odroid-c1.lab.bitsmasher.net. 10800 IN	A	10.10.12.254
+
+franklin@server3:/etc/bind $ dig ANY _ldap._tcp.lab.bitsmasher.net @10.10.13.1 | grep net
+
+; <<>> DiG 9.11.5-P4-5.1+deb10u5-Raspbian <<>> ANY _ldap._tcp.lab.bitsmasher.net @10.10.13.1
+;_ldap._tcp.lab.bitsmasher.net.	IN	ANY
+_ldap._tcp.lab.bitsmasher.net. 10800 IN	SRV	10 50 389 server3.lab.bitsmasher.net.
+lab.bitsmasher.net.	10800	IN	NS	odroid-c1.lab.bitsmasher.net.
+server3.lab.bitsmasher.net. 10800 IN	A	10.10.13.1
+odroid-c1.lab.bitsmasher.net. 10800 IN	A	10.10.12.254
+
