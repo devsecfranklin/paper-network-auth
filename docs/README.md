@@ -1,13 +1,21 @@
-# latex-templates
+# Documentation
 
-A set of tempalte files and examples for producing
-writting work with the LaTeX language.
+## OpenBSD
 
-## Slides
+Working with LaTeX on OpenBSD systems.
 
-- Beamer
+```sh
+doas pkg_add gawk dos2unix geany # system utils
+doas pkg_add transfig gnuplot graphviz latexmk # TeX
+```
+
+## Linting
+
+```sh
+sudo apt update && sudo apt install lacheck
+lacheck *.tex
+```
 
 ## Papers
 
 What about it
-

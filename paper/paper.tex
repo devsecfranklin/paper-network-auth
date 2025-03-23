@@ -6,19 +6,281 @@
 \begin{document}
 
 % frontmatter: half title, title page, colophon (copyright page), epigraph, toc, preface, acknowledgements
-% \frontmatter{}
-% \include{frontmatter/title}
-
-Test
-
-% backmatter: appendix, bibliography, index, postface
-% \backmatter{}
-% \printindex
-% \nocite{*}
-% \bibliography{mybib.bib}
-% \bibliographystyle{plain}
-% \include{backmatter/about-author}
+\frontmatter{}
+\include{frontmatter/title}
 
 %%% front cover, spline, back cover
 % front_cover
+
+\section{\label{sec:intro}Secure Network Authentication with Kerberos and OpenLDAP}
+\vspace{2mm}
+
+\justifying
+Secure authentication is a primary concern in multi-user networks. Simply put, network administrators are tasked with ensuring 
+valid users are able to access network resources, and the rest of the world is not. For this project, MIT Kerberos\cite{krb}\cite{what-is-krb} provides
+a secure authentication mechanism, using \href{https://www.openldap.org/}{OpenLDAP} schemas for defining user accounts.
+
+\section{\label{sec:Project}Project Goals}
+\vspace{2mm}
+\justifying
+There are several goals related to this project. These goals overlap and interconnect at times. The overarching goal is to understand the composition,
+management, and weaknesses of the items listed here.
+
+\begin{raggedright}
+	\begin{enumerate}
+		\item Normalize the installation and use of secure authentication methodology using Open Source software.
+		\item Move away from SSH keys and complicated ``key management'' schemes.
+		\item Provide a working example to make this authentication paradigm easier to reproduce.
+	\end{enumerate}
+\end{raggedright}
+\vspace{2mm}
+
+\justifying
+There are websites and documentation that detail installation and some configuration tasks related to this authentication paradigm.
+It can be difficult to find practical examples and detailed demonstration of usage and usability. 
+
+\section{\label{sec:environment}The Lab Environment}
+\vspace{2mm}
+\justifying
+This section is a brief description of the ``Private Cloud'' lab environment in which the project was built and deployed. 
+
+\begin{raggedright}
+	\begin{enumerate}
+		\item Single Board Compute (SBC) devices were chosen for their low power consumption/heat output and silent operation when possible.
+		\item Cluster nodes are meant to be added and rebuilt quickly and easily. Use Ansible and other automation whenever possible.
+	\end{enumerate}
+\end{raggedright}
+
+\vspace{2mm}
+\justifying
+The core of the Kerberos authentication implementation is the Key Distribution Center (KDC). In this lab configuration, the KDC is running on
+an O-droid C1 running Ubuntu.
+
+\begin{figure}[H]
+	\includegraphics[width=12cm]{../images/lab.png}
+	\caption{The project environment used for testing.}
+	\label{lab}
+\end{figure}
+
+
+\justifying
+A Palo Alto Networks VM-220 is used to pass traffic in and out of the cluster. The firewall has also been configured to serve DHCP to clients,
+though this service could be placed elsewhere in the network with minimal effort.
+
+\vspace{2mm}
+\ptitle{DNS Configuration}
+\vspace{2mm}
+
+\justifying
+It is possible for clients to locate a KDC through URI records in DNS. While \href{https://web.mit.edu/kerberos/www/krb5-latest/doc/admin/realm_config.html#kdc-discovery}{the MIT Kerberos Documentation}
+does provide a good explanation and an example configuration, some changes were needed to make the feature behave correctly with Debian 10 Buster and BIND9 with private/local DNS servers.
+
+\begin{mybox}{\thetcbcounter: Configuring DNS for Kerberos}
+	\lstinputlisting{code/krb-dns.txt}
+\end{mybox}
+
+\justifying
+Validation of the proper DNS configuration can be performed via command line. 
+
+\begin{mybox}{\thetcbcounter: Verifying DNS for Kerberos}
+	\lstinputlisting{code/krb-dns-2}
+\end{mybox}
+
+
+\vspace{2mm}
+\ptitle{NTP Configuration}
+\vspace{2mm}
+
+
+\justifying
+A reliable source of time for the network is critical for this project. An example NTP configuration via \href{https://github.com/devsecfranklin/paper-kerberos-openldap/blob/main/ansible/roles/common/tasks/ntp.yml}{Ansible playbook has been included} for reference.
+While it is possible to \href{http://www.vervest.org/htp/}{synchronize time via the HTTP network time protocol}, it is highly discouraged for this authentication methodology.
+
+\section{\label{sec:krb}Kerberos}
+
+\vspace{2mm}
+\ptitle{Kerberos Server}
+\vspace{2mm}
+
+\justifying
+Kerberos KDC servers are configured using the files listed in the following table. Examples are 
+provided in the ``ansible/'' folder in source repository of this paper.
+
+\begin{raggedright}
+	\begin{enumerate}
+		\item /etc/krb5.conf
+		\item /etc/krb5kdc/kadm5.acl
+		\item /etc/krb5kdc/kdc.conf
+		
+	\end{enumerate}
+\end{raggedright}
+
+\vspace{2mm}
+\ptitle{Kerberos Client}
+\vspace{2mm}
+
+Client configurations tend to be a bit more complex than configuring the servers simply because there are more touch points.
+
+\vspace{2mm}
+\ptitle{Principals and Keytabs}
+\vspace{2mm}
+
+\justifying
+A Kerberos principal is a user or service upon with certain access related entitlements are bestowed. Administrators use the ``kadmin''
+command to \href{https://web.mit.edu/kerberos/krb5-1.19/doc/admin/princ_dns.html}{define the user and service principals}. Consider the following typical 
+provisioning session.
+
+\begin{mybox}{\thetcbcounter: Keytab Creation}
+	\lstinputlisting{code/kt.txt}
+\end{mybox}
+
+The keytabs present on any given host in the network will look similar to the following code block. Note that the ``kadmin'' command is run on the
+host where the keytab file should ultimately reside. This allows for the ``klist'' command to successfully show the ``host'' and ``ldap'' principals
+in the output.
+
+\begin{mybox}{\thetcbcounter: Viewing Keytabs}
+	\lstinputlisting{code/keytabs}
+\end{mybox}
+
+\section{\label{sec:openldap}OpenLDAP}
+
+The OpenLDAP portion of the configuration serves as a backend storage for details about user accounts. User accounts are stored as objects with
+unique ``distinguished names'' (DNs). 
+
+\vspace{2mm}
+\ptitle{Supported SASL Mechanisms}
+\vspace{2mm}
+
+\begin{mybox}{\thetcbcounter: Viewing the Support SASL Mechanisms}
+	\lstinputlisting{code/ldap-sasl}
+\end{mybox}
+
+
+\justifying
+The ``/etc/nsswitch.conf'' file is used to define the type and order of the methods that will be
+used for lookups on things like the password, group, etc for a user. One the OpenLDAP server is installed and configured properly, the nsswitch file is updated so the host will perform lookups
+against the LDAP database.
+
+\begin{mybox}{\thetcbcounter: The /etc/nsswitch.conf file}
+	\lstinputlisting{code/nsswitch.conf}
+\end{mybox}
+
+\section{\label{sec:integration}Integrations}
+
+An application that is configured to work with the Kerberos authentication framework is said to be ``Kerberized''.
+
+\vspace{2mm}
+\ptitle{Kerberized SSH}
+\vspace{2mm}
+
+\justifying
+Integration of Secure Shell (SSH) with Kerberos is a common use case. Attackers are actively looking for SSH keys that they can exploit\cite{ssh-key}. SSH
+keys and other sensitive credentials are often inadvertently committed to revision control systems by developers. These can be 
+\href{https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository#fully-removing-the-data-from-github}{quite difficult to remove from the history of a repository} and may even necessitate deleting and recreating the repository. Leaving it up to the end user to
+opt-in to the SSH key management initiatives outlined by IT or Security arm of the organization brings risk. Centralization of user and password management
+means reducing this risk.
+\vspace{2mm}
+
+\justifying
+Updates to the ``/etc/ssh/ssh\_config'' and ``/etc/ssh/sshd\_config'' files are made to allow Kerberos interactions with SSH on the incoming and outgoing sessions respectively. Modification of the user configuration can be done by the user or enforced via Ansible playbook to ensure compliance. Settings in the aforementioned server level configuration may be overridden if permitted.
+\vspace{2mm}
+
+\begin{mybox}{\thetcbcounter: User's \$\{HOME\}/.ssh/config file}
+	\lstinputlisting{code/ssh-config}
+\end{mybox}
+\vspace{2mm}
+
+\justifying
+Once a user has successfully authenticated to the KDC using the kinit command, hosts can be configured to allow logins with no password.
+
+\vspace{2mm}
+\begin{mybox}{\thetcbcounter: Obtaining a ticket from the KDC.}
+	\lstinputlisting{code/kinit-session}
+\end{mybox}
+\vspace{2mm}
+
+\justifying
+The project support \href{https://www.rfc-editor.org/rfc/rfc4462.html#page-13}{authentication using GSS-API user authentication} as well as \href{https://www.rfc-editor.org/rfc/rfc4462.html#page-19}{authentication using GSS-API key exchange} as described in RFC 4462\cite{rfc4462}.
+
+\justifying
+The next figure shows the debug from a typical SSH session with the ``gssapi-with-mic'' authentication method enabled. Note that the ``-K'' flag is typically not required since
+we've specified our setup in ``\$\{HOME\}/.ssh/config''.
+
+\vspace{2mm}
+\begin{mybox}{\thetcbcounter: SSH Connection with Kerberos}
+	\lstinputlisting{code/ssh-session}
+\end{mybox}
+
+\justifying
+A similar method could be used to enable/validate the GSS-API key exchange method as described in the reference document\cite{rfc4462}.
+
+\vspace{2mm}
+\ptitle{Ansible Integration}
+\vspace{2mm}
+
+\justifying
+\href{https://www.ansible.com/overview/how-ansible-works}{Ansible playbooks} can be used to deploy and manage the entire authentication ecosystem,
+be it in public/private networks or cloud environments. The \href{https://docs.ansible.com/ansible/2.3/intro_inventory.html#hosts-and-groups}{Ansible inventory is used to group and manage your hosts} in ways that make sense for your 
+network.
+
+\justifying
+Once the KDC and OpenLDAP servers are running, you can authenticate your Ansible plays against the KDC. Note the specification of the Kerberos Realm in the Ansible hosts file. The realm is appended to each host in all capital letters.
+
+\begin{mybox}{\thetcbcounter: Authorizing Ansible via Kerberos}
+	\lstinputlisting{code/ansible-auth.txt}
+\end{mybox}
+
+\vspace{2mm}
+\ptitle{Pan OS Integration}
+\vspace{2mm}
+
+\justifying
+Once the KDC is up and the user has been provisioned with an LDAP account, \href{https://docs.paloaltonetworks.com/pan-os/10-0/pan-os-admin/authentication/configure-kerberos-server-authentication.html}{it is trivial to integrate with 
+Palo Alto Networks security devices} running PANOS. The user accounts are available on the device after entering the details about
+the KDC.
+
+\vspace{2mm}
+\ptitle{Container Integration}
+\vspace{2mm}
+
+\justifying
+Users are able to authenticate against the KDC from a container by simply copying in the ``/etc/krb5.conf'' file and then running ``kinit'' as usual.
+
+\justifying
+A full working example Dockerfile has been included for testing and proof of concept. Consider the following execution provided for demonstration purposes.
+
+\begin{mybox}{\thetcbcounter: Authenticating against KDC from a Container}
+	\lstinputlisting{code/container-krb}
+\end{mybox}
+
+\section{\label{sec:summary}Summary}
+
+\justifying
+This project paper demonstrates the configuration and capabilities of Kerberos and OpenLDAP, and outlines the reasoning behind the need for adopting a
+centralized mechanism for authentication.
+
+\vspace{2mm}
+\ptitle{Future Direction}
+\vspace{2mm}
+
+\begin{raggedright}
+	\begin{enumerate}
+		\item Containerize the KDC and LDAP servers and move the entire ecosystem into Kubernetes.
+		\item Integration of Kerberos with NFS and \href{https://sssd.io/}{SSSD}
+	\end{enumerate}
+\end{raggedright}
+
+% backmatter: appendix, bibliography, index, postface
+\backmatter{}
+% \printindex
+
+\clearpage
+\begin{versionhistory}
+    \vhEntry{v0.1}{March 18th, 2014}{Franklin Diaz}{Initial Draft}
+	\vhEntry{v0.2}{Sept. 29th, 2021}{Franklin Diaz}{Updates}
+\end{versionhistory}
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{mybib.bib}
+% \include{backmatter/about-author}
 \end{document}
