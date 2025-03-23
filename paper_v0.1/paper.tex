@@ -1,0 +1,21 @@
+\section{Resources)
+	
+	http://www.debian-administration.org/articles/570
+	http://techpubs.spinlocksolutions.com/dklar/kerberos.html
+	http://mindref.blogspot.com/2010/12/debian-kerberos-slave.html
+	http://mindref.blogspot.com/2010/12/kerberos-dns-discovery.html
+	
+\section{Machines and Packages}
+
+\section{OpenAFS}
+
+OpenLDAP has to have support for SASL and GSSAPI. SASL can use GSSAPI to extend it's auth mechanisms. SASL and GSSAPI
+are frameworks that various authentication providers can be plugged into, for example Kerberos or NTLM.
+
+Here's an example to help make this a little clearer (brutally simplified for clarity's sake):
+
+1. Client connects to server and says, "I support SASL! How should I authenticate myself?"
+2. Server receives the connection and responds, "I also support SASL, and can use these mechanisms, in descending order of preference: GSSAPI, CRAM-MD5, PLAIN."
+3. Client responds, "Of the choices, I'd like to use GSSAPI."
+4. Server responds "GSSAPI? Capital. I support Kerberos and NTLM."
+5. Client responds "Let's use Kerberos. Here's my encrypted ticket etc. etc."

@@ -1,4 +1,4 @@
-# Documentation
+# Paper
 
 ## OpenBSD
 
@@ -16,6 +16,3 @@ sudo apt update && sudo apt install lacheck
 lacheck *.tex
 ```
 
-## Papers
-
-What about it
