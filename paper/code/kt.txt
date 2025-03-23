@@ -1,0 +1,8 @@
+sudo -i
+kinit root/admin
+kadmin
+addprinc -randkey host/head1.lab.bitsmasher.net
+addprinc -randkey ldap/head1.lab.bitsmasher.net
+ktadd host/grimoire.lab.bitsmasher.net ldap/grimoire.lab.bitsmasher.net
+(quit)
+klist -ke /etc/krb5.keytab

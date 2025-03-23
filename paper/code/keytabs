@@ -1,0 +1,10 @@
+franklin ~: sudo klist -ke /etc/krb5.keytab 
+
+Keytab name: FILE:/etc/krb5.keytab
+KVNO Principal
+---- --------------------------------------------------------------------------
+   2 host/thelio.lab.bitsmasher.net@LAB.BITSMASHER.NET (aes256-cts-hmac-sha1-96) 
+   2 host/thelio.lab.bitsmasher.net@LAB.BITSMASHER.NET (aes128-cts-hmac-sha1-96) 
+   2 ldap/thelio.lab.bitsmasher.net@LAB.BITSMASHER.NET (aes256-cts-hmac-sha1-96) 
+   2 ldap/thelio.lab.bitsmasher.net@LAB.BITSMASHER.NET (aes128-cts-hmac-sha1-96) 
+

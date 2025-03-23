@@ -1,0 +1,10 @@
+Host *.lab.bitsmasher.net
+  User "franklin"
+  PreferredAuthentications gssapi-keyex,gssapi-with-mic
+  GSSAPIAuthentication yes
+  GSSAPIDelegateCredentials yes
+  CanonicalizeHostname yes
+  CanonicalDomains lab.bitsmasher.net
+  CanonicalizeMaxDots 3
+  CanonicalizeFallbackLocal yes
+

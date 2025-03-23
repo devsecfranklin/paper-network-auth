@@ -1,0 +1,11 @@
+;KERBEROS Records
+$ORIGIN lab.bitsmasher.net.
+_kerberos               TXT     "LAB.BITSMASHER.NET"
+_kerberos._udp          SRV     0 0 88 odroid-c1
+_kerberos-master._udp   SRV     0 0 88 odroid-c1
+_kerberos-adm._tcp      SRV     0 0 749 odroid-c1
+_kpasswd._udp           SRV     0 0 464 odroid-c1
+_kerberos               URI    10 1 "krb5srv:m:tcp:odroid-c1.lab.bitsmasher.net"
+
+;LDAP Records
+_ldap._tcp		IN SRV 10 50 389 server3

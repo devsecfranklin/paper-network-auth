@@ -1,0 +1,20 @@
+[servers]
+odroid-c1.LAB.BITSMASHER.NET ansible_user=root
+server1.LAB.BITSMASHER.NET
+server2.LAB.BITSMASHER.NET
+server3.LAB.BITSMASHER.NET
+
+[storage]
+storage1.LAB.BITSMASHER.NET
+
+[raspi_cluster]
+head1.LAB.BITSMASHER.NET
+node0.LAB.BITSMASHER.NET
+node1.LAB.BITSMASHER.NET
+node2.LAB.BITSMASHER.NET
+node3.LAB.BITSMASHER.NET
+
+[nvidia_cluster]
+node900.LAB.BITSMASHER.NET 
+node901.LAB.BITSMASHER.NET
+

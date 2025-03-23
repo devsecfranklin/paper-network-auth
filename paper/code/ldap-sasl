@@ -1,0 +1,12 @@
+franklin@server3:~ $ ldapsearch -x -b '' -s base supportedSASLMechanisms -LLL
+dn:
+supportedSASLMechanisms: SCRAM-SHA-1
+supportedSASLMechanisms: SCRAM-SHA-256
+supportedSASLMechanisms: GS2-IAKERB
+supportedSASLMechanisms: GS2-KRB5
+supportedSASLMechanisms: GSS-SPNEGO
+supportedSASLMechanisms: GSSAPI
+supportedSASLMechanisms: DIGEST-MD5
+supportedSASLMechanisms: NTLM
+supportedSASLMechanisms: CRAM-MD5
+
