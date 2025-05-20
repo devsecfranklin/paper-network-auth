@@ -3,6 +3,7 @@ AC_PREREQ([2.69])
 AC_INIT(latex-template, 0.1, franklin@dead10c5.org, https://github.com/devsecfranklin/paper-network-auth)
 AC_CONFIG_MACRO_DIR(config/m4)
 AC_CONFIG_AUX_DIR(config)
+dnl run automake -i
 AM_INIT_AUTOMAKE(foreign)
 
 LT_INIT
