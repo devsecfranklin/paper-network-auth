@@ -1,15 +1,27 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#
+# SPDX-FileCopyrightText: ©2021-2025 franklin <franklin@bitsmasher.net>
+#
+# SPDX-License-Identifier: MIT
 
-# v0.1 02/25/2022 Maintainer script
+# ChangeLog:
+#
+# v0.1 02/25/2021 Maintainer script
 # v0.2 09/24/2022 Update this script
 # v0.3 10/19/2022 Add tool functions
 # v0.4 11/10/2022 Add automake check
-# v0.5 11/15/2022 Handle Docker container builds
+# v0.5 11/16/2022 Handle Docker container builds
+# v0.6 07/13/2023 Add required_files and OpenBSD support
+# v0.7 04/22/2024 More OpenBSD support
+# v0.8 09/06/2024 Support GCP Linux
+# v0.9 02/18/2025 Updates for Mac
+# v1.0 02/26/2025 Optimize some functions using Gemini 2.0 Flash
 
-# Author:  franklin@dead10c5.org
+#set -euo pipefail
 
-#set -eu
-
+# The special shell variable IFS determines how Bash
+# recognizes word boundaries while splitting a sequence of character strings.
+#IFS=$'\n\t'
 #Black        0;30     Dark Gray     1;30
 #Red          0;31     Light Red     1;31
 #Green        0;32     Light Green   1;32
